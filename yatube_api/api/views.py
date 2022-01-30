@@ -1,1 +1,36 @@
-# TODO:  Напишите свой вариант
+from django.shortcuts import get_object_or_404
+
+from rest_framework import viewsets, permissions
+from rest_framework.pagination import LimitOffsetPagination
+from api.permission import IsOwnerOrReadOnly
+from api.serializers import PostSerializer, CommentSerializer, GroupSerializer
+
+from posts.models import Post, Comment, Group
+
+
+class PostViewSet(viewsets.ModelViewSet):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = [IsOwnerOrReadOnly, permissions.IsAuthenticated]
+    pagination_class = LimitOffsetPagination
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+
+class CommentViewSet(viewsets.ModelViewSet):
+    serializer_class = CommentSerializer
+    permission_classes = [IsOwnerOrReadOnly, permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        post = get_object_or_404(Post, id=self.kwargs['id'])
+        return Comment.objects.filter(post=post)
+
+    def perform_create(self, serializer):
+        post = get_object_or_404(Post, id=self.kwargs['id'])
+        serializer.save(author=self.request.user, post=post)
+
+
+class GroupViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
