@@ -44,14 +44,14 @@ class GroupViewSet(viewsets.ReadOnlyModelViewSet):
 
 class FollowViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
                     mixins.RetrieveModelMixin, viewsets.GenericViewSet):
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
-    def get_queryset(self):
-        return Follow.objects.filter(user=self.request.user)
-
     serializer_class = FollowSerializer
     permission_classes = [permissions.IsAuthenticated, ]
     filter_backends = (DjangoFilterBackend, filters.SearchFilter)
     pagination_class = None
     search_fields = ("user__username", "following__username")
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def get_queryset(self):
+        return Follow.objects.filter(user=self.request.user)
