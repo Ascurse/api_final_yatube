@@ -34,10 +34,10 @@ class CommentAdmin(admin.ModelAdmin):
         'post',
         'text',
         'author',
-        'pub_date',
+        'created',
     )
     list_editable = ('text',)
-    list_filter = ('pub_date',)
+    list_filter = ('created',)
 
 
 class FollowAdmin(admin.ModelAdmin):
