@@ -1,5 +1,11 @@
-# api_final
-API для проекта YaTube.
+# api_yatube
+Api для социальной сети yatube https://github.com/Ascurse/Yatube_network.
+#### Технологии
+- Python 3.7.0
+- Django 2.2.16
+- Django REST framework 3.12.4
+- Simple JWT 4.7.2
+
 
 ### Как запустить проект:
 
